@@ -11,14 +11,18 @@
 
         <table class="table">
             <thead>
-                <th>Name</th>
+                <th scope="col">Name</th>
+                <th scope="col"></th>
             </thead>
 
             <tbody>
                 @foreach($categories as $category)
-                <tr>
+                <tr scope="row">
                     <td>
                         {{ $category->name }}
+                    </td>
+                    <td class="float-right">
+                        <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-info btn-sm">Edit</a>
                     </td>
                 </tr>
                 @endforeach
