@@ -22,6 +22,9 @@
                         {{ $category->name }}
                     </td>
                     <td class="float-right">
+                        <button class="btn btn-danger btn-sm" onclick="handleDelete({{ $category->id }})">Delete</button>
+                    </td>
+                    <td class="float-right">
                         <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-info btn-sm">Edit</a>
                     </td>
                 </tr>
@@ -29,7 +32,46 @@
             </tbody>
         </table>
 
+        <form action="" method="POST" id="deleteCategoryForm">
+            @csrf
+            @method('DELETE')
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete Category</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center text-bold">Are you sure you want to delete this category?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No, Return</button>
+                            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+
+<script>
+    const handleDelete = (id) => {
+
+        let form = document.getElementById('deleteCategoryForm');
+        form.action = `/categories/${id}`;
+
+        $('#deleteModal').modal('show');
+
+    };
+</script>
 @endsection
