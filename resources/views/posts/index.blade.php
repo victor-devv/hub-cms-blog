@@ -26,7 +26,13 @@
                         {{ $post->title }}
                     </td>
                     <td class="float-right">
-                        <button class="btn btn-danger btn-sm" onclick="handleTrash({{ $post->id }})">Trash</button>
+                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="btn btn-danger btn-sm">Trash</button>
+
+                        </form>
                     </td>
                     <td class="float-right">
                         <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-info btn-sm">Edit</a>
