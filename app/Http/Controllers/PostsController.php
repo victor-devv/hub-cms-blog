@@ -102,7 +102,7 @@ class PostsController extends Controller
         $post->delete();
 
         // Flash success message
-        session()->flash('success', 'Post Deleted Successfully!');
+        session()->flash('success', 'Post Trashed Successfully!');
 
         // Redirect user
         return redirect(route('posts.index'));
