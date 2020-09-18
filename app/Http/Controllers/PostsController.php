@@ -97,14 +97,38 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        $post->delete();
+        //This would be used instead of route model binding because route model binding wouldn't find a soft deleted post
+        $post = Post::withTrashed()->where('id', $id)->firstOrFail();
 
-        // Flash success message
-        session()->flash('success', 'Post Trashed Successfully!');
+        if ($post->trashed()) {
+            $post->forceDelete();
+
+            // Flash success message
+            session()->flash('success', 'Post Deleted Successfully!');
+        } else {
+            $post->delete();
+
+            // Flash success message
+            session()->flash('success', 'Post Trashed Successfully!');
+        }
 
         // Redirect user
         return redirect(route('posts.index'));
     }
+
+
+    /**
+     * Displays a list of all trashed posts.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function trashed()
+    {
+        $trashed = Post::withTrashed()->get();
+
+        return view('posts.index')->withPosts($trashed); //same as with('posts', $trashed)
+    }
+
 }
