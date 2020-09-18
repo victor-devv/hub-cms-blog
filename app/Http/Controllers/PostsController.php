@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\Post\CreatePostsRequest;
+use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
 {
@@ -103,6 +104,10 @@ class PostsController extends Controller
         $post = Post::withTrashed()->where('id', $id)->firstOrFail();
 
         if ($post->trashed()) {
+            // Delete Post Image
+            Storage::delete($post->image); //remember $post->image is the path to the image location
+
+            //Delete Post
             $post->forceDelete();
 
             // Flash success message
