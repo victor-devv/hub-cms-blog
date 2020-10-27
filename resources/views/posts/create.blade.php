@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('css')
+<!-- DATEPICKER -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@endsection
+
 @section('content')
 
 <div class="card card-default">
@@ -34,7 +39,8 @@
 
             <div class="form-group">
                 <label for="content">Content</label>
-                <textarea name="content" id="content" cols="5" rows="5" class="form-control">{{ isset($post) ? $post->content : '' }}</textarea>
+                <input id="content" type="hidden" name="content" value="{{ isset($post) ? $post->content : '' }}" />
+                <trix-editor input="content"></trix-editor>
             </div>
 
             <div class="form-group">
@@ -42,9 +48,15 @@
                 <input type="text" id="published_at" class="form-control" name="published_at" value="{{ isset($post) ? $post->published_at : '' }}">
             </div>
 
+                <!-- <div class="form-group">
+                </div> -->
             <div class="form-group">
                 <label for="image">Image</label>
-                <input type="file" id="image" class="form-control" name="image">
+                @if(isset($post))
+                    <img src="{{ asset('storage/'.$post->image) }}" alt="post image" style="width: 100%">
+                @endif
+
+                <input type="file" id="image" class="form-control" name="image" >
             </div>
 
             <div class="form-group">
@@ -54,4 +66,15 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+<!-- DATEPICKER -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    flatpickr('#published_at', {
+        enableTime: true
+    })
+</script>
 @endsection

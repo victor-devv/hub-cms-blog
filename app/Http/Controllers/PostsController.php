@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\Post\CreatePostsRequest;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\Post\UpdatePostRequest;
 
 class PostsController extends Controller
 {
@@ -36,7 +36,7 @@ class PostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreatePostsRequest $request)
-    {
+    { 
         // Upload the image 
 
         // dd($request->image->store('posts')); //this generates the path to the stored uploaded image. posts is the folder where the file is stored. check file in storage/app/posts
@@ -48,6 +48,7 @@ class PostsController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'content' => $request->content,
+            'published_at' => $request->published_at,
             'image' => $image //path to the image
         ]);
 
@@ -75,9 +76,9 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
+        return view('posts.create')->with('post', $post);
     }
 
     /**
@@ -87,9 +88,31 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $data = $request->only(['title', 'description', 'published_at', 'content']);
+
+        // check for new image
+        if ($request->hasFile('image')) {
+            // upload it
+            $image = $request->image->store('posts');
+
+            // delete old image
+            // Storage::delete($post->image);
+            $post->deleteImage();
+
+            $data['image'] = $image;
+        }
+
+        // update attributes
+        $post->update($data);
+
+        // flash message
+        session()->flash('success', 'Post Updated Successfully');
+
+        // redirect user
+        return redirect(route('posts.index'));
+
     }
 
     /**
@@ -105,7 +128,9 @@ class PostsController extends Controller
 
         if ($post->trashed()) {
             // Delete Post Image
-            Storage::delete($post->image); //remember $post->image is the path to the image location
+            // Storage::delete($post->image);
+            $post->deleteImage();
+            //remember $post->image is the path to the image location
 
             //Delete Post
             $post->forceDelete();
@@ -131,9 +156,27 @@ class PostsController extends Controller
      */
     public function trashed()
     {
-        $trashed = Post::withTrashed()->get();
+        // $trashed = Post::withTrashed()->get();//withTrashed shows all including trashed
+        $trashed = Post::onlyTrashed()->get();
 
         return view('posts.index')->withPosts($trashed); //same as with('posts', $trashed)
+    }
+
+    /**
+     * Restores a trashed post.
+     *
+     *
+     */
+
+    public function restore($id)
+    {
+        $post = Post::withTrashed()->where('id', $id)->firstOrFail();
+
+        $post->restore();
+
+        session()->flash('success', 'Post Restored Successfully!');
+
+        return redirect()->back();
     }
 
 }

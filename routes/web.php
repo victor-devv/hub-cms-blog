@@ -25,3 +25,5 @@ Route::resource('categories', 'CategoriesController');
 Route::resource('posts', 'PostsController');
 
 Route::get('trashed-posts', 'PostsController@trashed')->name('trashed-posts.index'); //name() gives a route name, so in the blade files you go to a route via the route names with route() instead of the route itself. To check all route names 'art route:list'
+
+Route::put('restore-post/{post}', 'PostsController@restore')->name('restore-post');
