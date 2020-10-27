@@ -48,15 +48,36 @@
                 <input type="text" id="published_at" class="form-control" name="published_at" value="{{ isset($post) ? $post->published_at : '' }}">
             </div>
 
-                <!-- <div class="form-group">
+            <!-- <div class="form-group">
                 </div> -->
             <div class="form-group">
                 <label for="image">Image</label>
                 @if(isset($post))
-                    <img src="{{ asset('storage/'.$post->image) }}" alt="post image" style="width: 100%">
+                <img src="{{ asset('storage/'.$post->image) }}" alt="post image" style="width: 100%">
                 @endif
 
-                <input type="file" id="image" class="form-control" name="image" >
+                <input type="file" id="image" class="form-control" name="image">
+            </div>
+
+            <div class="form-group">
+                <label for="category"></label>
+                <select class="form-control" name="category" id="category">
+                    @if(isset($post))
+
+                    @foreach($categories as $category)
+                    <option value="{{ $category->id }}" @if($category->id === $post->category_id)
+                        selected
+                        @endif
+                        >{{ $category->name }}</option>
+                    @endforeach
+
+                    @else
+                    @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+
+                    @endif
+                </select>
             </div>
 
             <div class="form-group">

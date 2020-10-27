@@ -14,6 +14,7 @@
             <table class="table">
                 <thead>
                     <th scope="col">Name</th>
+                    <th scope="col">Posts Count</th>
                     <th scope="col"></th>
                 </thead>
 
@@ -23,6 +24,11 @@
                         <td>
                             {{ $category->name }}
                         </td>
+                        
+                        <td>
+                            {{ $category->posts->count() }}
+                        </td>
+
                         <td class="float-right">
                             <button class="btn btn-danger btn-sm" onclick="handleDelete({{ $category->id }})">Delete</button>
                         </td>
