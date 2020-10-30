@@ -12,15 +12,7 @@
         {{ isset($post) ? 'Edit Post' : 'Create Post' }}
     </div>
     <div class="card-body">
-        @if($errors->any())
-        <div class="alert alert-danger">
-            <div class="list-group">
-                @foreach($errors->all() as $error)
-                <li class="list-group-item text-danger">{{ $error }}</li>
-                @endforeach
-            </div>
-        </div>
-        @endif
+        @include('partials.errors')
         <form action="{{ isset($post) ? route('posts.update', $post->id) : route('posts.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 

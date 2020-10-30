@@ -19,11 +19,16 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// All routes in this group are protected by the auth middleware
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('categories', 'CategoriesController');
-Route::resource('posts', 'PostsController');
+    Route::resource('categories', 'CategoriesController');
+    Route::resource('posts', 'PostsController')->middleware('auth');
 
-Route::get('trashed-posts', 'PostsController@trashed')->name('trashed-posts.index'); //name() gives a route name, so in the blade files you go to a route via the route names with route() instead of the route itself. To check all route names 'art route:list'
+    Route::resource('tags', 'TagsController');
 
-Route::put('restore-post/{post}', 'PostsController@restore')->name('restore-post');
+    Route::get('trashed-posts', 'PostsController@trashed')->name('trashed-posts.index'); //name() gives a route name, so in the blade files you go to a route via the route names with route() instead of the route itself. To check all route names 'art route:list'
+
+    Route::put('restore-post/{post}', 'PostsController@restore')->name('restore-post');
+});

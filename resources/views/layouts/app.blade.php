@@ -17,10 +17,9 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}?v=1.1" rel="stylesheet">
     <style>
-        .btn-info{
+        .btn-info {
             color: #fff;
         }
-
     </style>
     @yield('css')
 </head>
@@ -89,6 +88,10 @@
                             <li class="list-group-item">
                                 <a href="{{ route('categories.index') }}">Categories</a>
                             </li>
+                            <li class="list-group-item">
+                                <a href="{{ route('tags.index') }}">Tags</a>
+                            </li>
+
                         </ul>
 
                         <ul class="list-group mt-5">
@@ -106,6 +109,12 @@
                                 {{ session()->get('success') }}
                             </div>
                             @endif
+                            @if(session()->has('error'))
+                            <div class="alert alert-danger">
+                                {{ session()->get('error') }}
+                            </div>
+                            @endif
+
                         </div>
                         @yield('content')
                     </div>

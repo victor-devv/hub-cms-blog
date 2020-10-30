@@ -10,6 +10,13 @@ use App\Http\Requests\Post\CreatePostsRequest;
 
 class PostsController extends Controller
 {
+
+    public function __construct()
+    {
+        // apply the verifyCategoriesCount middleware only on the create and store routes for this resourceful controller
+        $this->middleware('verifyCategoriesCount')->only(['create', 'store']);
+    }
+
     /**
      * Display a listing of the resource.
      *
