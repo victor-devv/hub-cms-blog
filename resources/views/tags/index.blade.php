@@ -26,7 +26,7 @@
                     </td>
 
                     <td>
-                        0
+                        {{ $tag->posts->count() }}
                     </td>
 
                     <td class="float-right">

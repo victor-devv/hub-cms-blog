@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Tag;
 use App\Post;
 use App\Category;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('posts.create')->with('categories', Category::all());
+        return view('posts.create')->with('categories', Category::all())->with('tags', Tag::all());
     }
 
     /**
@@ -44,7 +45,7 @@ class PostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreatePostsRequest $request)
-    { 
+    {
         // Upload the image 
 
         // dd($request->image->store('posts')); //this generates the path to the stored uploaded image. posts is the folder where the file is stored. check file in storage/app/posts
@@ -52,7 +53,7 @@ class PostsController extends Controller
         $image = $request->image->store('posts');
 
         // Create post
-        Post::create([
+        $post = Post::create([
             'title' => $request->title,
             'description' => $request->description,
             'content' => $request->content,
@@ -60,6 +61,10 @@ class PostsController extends Controller
             'category_id' => $request->category,
             'image' => $image //path to the image
         ]);
+
+        if ($request->tags) {
+            $post->tags()->attach($request->tags); //the attach is used for the many to many relationship. It will attach the tags selected on the frontend with the newly created post
+        }
 
         // Flash success message
         session()->flash('success', 'Post Created Successfully!');
@@ -87,7 +92,9 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.create')->with('post', $post)->with('categories', Category::all());
+        // dd($post->tags->pluck('id')->toArray());
+
+        return view('posts.create')->with('post', $post)->with('categories', Category::all())->with('tags', Tag::all());
     }
 
     /**
@@ -111,6 +118,10 @@ class PostsController extends Controller
             $post->deleteImage();
 
             $data['image'] = $image;
+        }
+
+        if ($request->tags) {
+            $post->tags()->sync($request->tags); //this will check for any new incoming tags and attach them to the post. If a current tag already associated with the post wasn't selected when editing (updating), then it detaches from the post.
         }
 
         // update attributes

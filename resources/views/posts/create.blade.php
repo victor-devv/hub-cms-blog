@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
 @section('css')
-<!-- DATEPICKER -->
+<!-- DATEPICKER -FLATPICKR -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- MULTI SELECT TOOL -SELECT2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -52,7 +55,7 @@
             </div>
 
             <div class="form-group">
-                <label for="category"></label>
+                <label for="category">Category</label>
                 <select class="form-control" name="category" id="category">
                     @if(isset($post))
 
@@ -71,6 +74,27 @@
                     @endif
                 </select>
             </div>
+            @if($tags->count() > 0)
+            <div class="form-group">
+                <label for="tags">Tags</label>
+                {{-- [] is used because it is a multiselect input, and the selected options have to be passed as an array, else only one would be in the request body--}}
+                <select name="tags[]" id="tags" class="form-control tags-selector" multiple>
+
+                    @foreach($tags as $tag)
+
+                    <option value="{{ $tag->id }}"
+                        @if(isset($post)) 
+                            @if($post->hasTag($tag->id))
+                                selected
+                            @endif
+                        @endif
+                    >{{ $tag->name }}</option>
+
+                    @endforeach
+
+                </select>
+            </div>
+            @endif
 
             <div class="form-group">
                 <button class="btn btn-success">{{ isset($post) ? 'Update Post' : 'Add Post' }}</button>
@@ -88,6 +112,17 @@
 <script>
     flatpickr('#published_at', {
         enableTime: true
+    })
+</script>
+
+<!-- MULTI SELECT TOOL -SELECT2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(() => {
+        $(".tags-selector").select2({
+            tags: true
+        });
     })
 </script>
 @endsection
