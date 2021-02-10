@@ -33,6 +33,28 @@
                         <a href="{{ route('categories.edit', $post->category->id) }}">{{ $post->category->name }}</a>
                     </td>
 
+                    <td scope="row" class="">
+                        <div class="d-flex">
+                            @if(!$post->trashed())
+
+                            <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info btn-sm align-self-start mr-4" role="button">View</a>
+
+                            <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-secondary btn-sm align-self-center mx-auto ml-2" role="button">Edit</a>
+
+                            @else
+
+                            <form action="{{ route('restore-post', $post->id) }}" class="float-right ml-auto" method="post" style="display: inline;">
+                                @csrf
+                                @method('PUT')
+
+                                <button class="btn btn-info btn-sm align-self-end" type="submit">Restore</button>
+
+                            </form>
+                            @endif
+
+                        </div>
+                    </td>
+
                     <td class="float-right">
                         <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
                             @csrf
@@ -44,23 +66,7 @@
 
                         </form>
                     </td>
-                    <td class="float-right">
-                        @if(!$post->trashed())
 
-                        <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-info btn-sm">Edit</a>
-
-                        @else
-
-                        <form action="{{ route('restore-post', $post->id) }}" method="post">
-                            @csrf
-                            @method('PUT')
-
-                            <button class="btn btn-info btn-sm" type="submit">Restore</button>
-
-                        </form>
-
-                        @endif
-                    </td>
                 </tr>
                 @endforeach
             </tbody>

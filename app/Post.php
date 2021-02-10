@@ -5,15 +5,19 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use CyrildeWit\EloquentViewable\Contracts\Viewable;
+use CyrildeWit\EloquentViewable\InteractsWithViews;
 
-class Post extends Model
+class Post extends Model implements Viewable
 {
     use SoftDeletes;
+    use InteractsWithViews;
 
     protected $fillable = [
         'title', 'description', 'content', 'image', 'published_at', 'category_id'
     ];
 
+    
     /**
      * Delete post image from storage
      * 

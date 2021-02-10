@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use visits;
 use App\Tag;
 use App\Post;
 use App\Category;
@@ -18,6 +19,8 @@ class PostsController extends Controller
         $this->middleware('verifyCategoriesCount')->only(['create', 'store']);
     }
 
+
+
     /**
      * Display a listing of the resource.
      *
@@ -25,6 +28,8 @@ class PostsController extends Controller
      */
     public function index()
     {
+        $post = new Post;
+        // $visits = Post::with('visits')->get(); 
         return view('posts.index')->with('posts', Post::all());
     }
 
@@ -79,9 +84,11 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        //
+        views($post)->record();
+
+        return view('posts.show')->with('post', $post)->with('categories', Category::all())->with('tags', Tag::all());
     }
 
     /**
