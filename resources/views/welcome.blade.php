@@ -84,12 +84,12 @@
 
         <div class="content">
             <div class="title m-b-md">
-                Hub Blog App
+                    Skooleeo Blog App
             </div>
 
             <div class="links">
                 <h3>Implementation By Victor Ikuomola</h3>
-                <h6>Hub Blog Unique Visitor Count: {{$visitorCount}}</h6>
+                <h6>Skooleeo Blog Unique Visitor Count: {{$visitorCount}}</h6>
             </div>
         </div>
     </div>
